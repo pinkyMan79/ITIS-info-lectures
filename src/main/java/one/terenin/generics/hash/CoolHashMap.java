@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-public class CoolHashMap<K, V> implements CoolMap <K, V> {
+public class CoolHashMap<K, V> implements CoolMap<K, V> {
 
     private final int MAP_CAPACITY = 16; // represents how many buckets are possible to store
     private final int BUCKET_CAPACITY = 8; // represents how many HashNode elements in bucket can be stored, if it is more throw an exception
@@ -13,7 +13,29 @@ public class CoolHashMap<K, V> implements CoolMap <K, V> {
 
     @Override
     public V put(K key, V value) {
-        return null;
+        HashNode<K, V> toPut = new HashNode<>(key, value);
+        int toPutHash = toPut.hashCode();
+        int index = toPutHash % MAP_CAPACITY; // 0..15
+
+        HashNode<K, V> bucket = buckets[index];
+        if (bucket == null) {
+            buckets[index] = toPut;
+            return toPut.value;
+        } else {
+            HashNode<K, V> tmp = bucket;
+            while (tmp.next != null) {
+                if (bucket.equals(toPut)) {
+                    return bucket.value;
+                }
+                if (tmp.key == toPut.key) {
+                    tmp.value = toPut.value;
+                    return tmp.value;
+                }
+                tmp = tmp.next;
+            }
+            tmp.next = toPut;
+            return toPut.value;
+        }
     }
 
     @Override

@@ -1,21 +1,44 @@
 package one.terenin.generics;
 
-public class MyListImpl implements MyLinkedList <Integer>{
+public class MyListImpl<T> implements MyLinkedList<T>{
 
-    private Node<Integer> head = new Node<>();
+    private Node<T> head = new Node<>();
+    private int size = 0;
 
     @Override
-    public Integer getElement(int index) {
-        Node<Integer> tmpNode = new Node<>();
-        tmpNode.next = head;
+    public T getElement(int index) {
+        Node<T> node = head;
         for (int i = 0; i < index; i++) {
-            tmpNode = tmpNode.next;
+            node = node.next;
         }
-        return tmpNode.value;
+        return node.value;
     }
 
     @Override
-    public void putElement(Integer element) {
+    public void putElement(T element) {
+        Node<T> node = new Node<>();
+        node.next = head;
+        while (node.next != null) {
+            node = node.next;
+        }
+        Node<T> newNode = new Node<>();
+        newNode.value = element;
+        node.next = newNode;
+        size++;
+    }
 
+    @Override
+    public T[] getAllElements() {
+        Node<T> tmp = head.next;
+        T[] result = (T[]) new Object[size];
+        for (int i = 0; i < size; i++) {
+            result[i] = tmp.value;
+            tmp = tmp.next;
+        }
+        return result;
+    }
+
+    public int getSize() {
+        return size;
     }
 }
